@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio do Rei | Codex Davidis</title>
+    <link rel="stylesheet" href="/projeto-davi/frontend/css/style.css">
+</head>
+<body class="game-bg">
+
+    <div class="game-container">
+        <nav class="status-bar">
+            <div class="user-info">
+                <span>Escriba: <strong id="display-username">Carregando...</strong></span>
+            </div>
+            <div class="stats">
+                <span>Nível: <strong id="current-level">1</strong></span>
+                <span id="lives">🛡️ 🛡️ 🛡️ 🛡️ 🛡️</span>
+            </div>
+        </nav>
+
+        <main class="cipher-area">
+            <header>
+                <h2>Decifre o Versículo</h2>
+                <p id="cipher-reference" class="reference">Buscando pergaminho no arquivo real...</p>
+            </header>
+
+            <div id="cipher-display" class="scroll-parchment">
+                </div>
+
+            <div class="input-group">
+                <input type="text" id="user-answer" placeholder="Digite a tradução correta..." autocomplete="off">
+                <button id="btn-check" class="btn-action">Validar Resposta</button>
+            </div>
+
+            <p class="tip">Dica: Números representam letras. Observe os padrões e a pontuação.</p>
+        </main>
+    </div>
+
+    <div id="custom-modal" class="modal-overlay hidden">
+        <div class="mini-modal">
+            <div id="modal-icon">✨</div>
+            <h3 id="modal-title">Resultado</h3>
+            <p id="modal-text">...</p>
+            <button id="modal-close" class="btn-modal">Continuar</button>
+        </div>
+    </div>
+
+    <script src="/projeto-davi/frontend/js/game.js"></script>
+</body>
+</html>

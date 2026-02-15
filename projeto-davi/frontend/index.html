@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codex Davidis | Entrada no Templo</title>
+    <link rel="stylesheet" href="/projeto-davi/frontend/css/style.css">
+</head>
+<body class="auth-bg">
+
+    <div class="auth-container">
+        <section id="login-section" class="auth-box">
+            <h2>Acesso ao Codex</h2>
+            <form id="login-form">
+                <input type="text" id="login-user" placeholder="Nome do Escriba" required>
+                <input type="password" id="login-pass" placeholder="Senha" required>
+                <button type="submit" class="btn-main">Entrar</button>
+            </form>
+            <p>Novo por aqui? <span id="show-register" class="link">Recrutar Escriba</span></p>
+        </section>
+
+        <section id="register-section" class="auth-box hidden">
+            <h2>Novo Escriba</h2>
+            <form id="register-form">
+                <input type="text" id="reg-user" placeholder="Nome do Escriba" required>
+                <input type="password" id="reg-pass" placeholder="Senha (Mín. 6 caracteres)" required>
+                <button type="submit" class="btn-main">Cadastrar</button>
+            </form>
+            <p>Já possui acesso? <span id="show-login" class="link">Voltar ao Início</span></p>
+        </section>
+    </div>
+
+    <div id="custom-modal" class="modal-overlay hidden">
+        <div class="mini-modal">
+            <div id="modal-icon">🛡️</div>
+            <h3 id="modal-title">Mensagem</h3>
+            <p id="modal-text">...</p>
+            <button id="modal-close" class="btn-modal">Entendido</button>
+        </div>
+    </div>
+
+    <script src="/projeto-davi/frontend/js/auth.js"></script>
+</body>
+</html>
