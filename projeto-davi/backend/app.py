@@ -5,15 +5,14 @@ from database import db, init_db
 from auth import auth_bp
 from cipher_logic import criptografar_versiculo
 
-# Configuração para encontrar os arquivos HTML/CSS/JS
-# Se seus arquivos estiverem na raiz ou em pastas específicas, ajustamos aqui:
-app = Flask(__name__, static_folder='.', static_url_path='')
+# Configuramos o Flask para reconhecer a pasta 'frontend' como local de arquivos estáticos
+app = Flask(__name__, static_folder='frontend', static_url_path='')
 
-# Configuração de CORS: Permite que o frontend acesse a API
+# CORS ativado para evitar bloqueios de segurança
 CORS(app)
 
-# --- CONFIGURAÇÃO DO BANCO DE DADOS (Correção para Vercel) ---
-# No Vercel, o SQLite só consegue escrever na pasta /tmp
+# --- CONFIGURAÇÃO DO BANCO DE DADOS (Ajuste para Vercel) ---
+# No Vercel, o banco precisa ficar na pasta /tmp para ter permissão de escrita
 if os.environ.get('VERCEL'):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/database.db'
 else:
@@ -21,10 +20,10 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Inicializa DB, Bcrypt e Tabelas
+# Inicializa extensões e tabelas
 init_db(app)
 
-# Registro das rotas de Autenticação
+# Registro do Blueprint de Autenticação
 app.register_blueprint(auth_bp)
 
 # --- BANCO DE DADOS DE VERSÍCULOS ---
@@ -36,16 +35,25 @@ versiculos = {
     5: {"texto": "O MEU SOCORRO VEM DO SENHOR", "ref": "Salmos 121:2"}
 }
 
-# --- ROTAS PARA SERVIR O FRONTEND (Evita o Erro 404) ---
+# --- ROTAS DE NAVEGAÇÃO (Resolvendo o Erro 404) ---
+
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
+    """Serve o arquivo index.html da pasta frontend"""
+    return send_from_directory('frontend', 'index.html')
 
-@app.route('/game')
+@app.route('/game.html')
 def game_page():
-    return send_from_directory('.', 'game.html')
+    """Serve o arquivo game.html da pasta frontend"""
+    return send_from_directory('frontend', 'game.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    """Rota genérica para servir CSS, JS e imagens dentro de frontend"""
+    return send_from_directory('frontend', path)
 
 # --- ROTA DA API DO JOGO ---
+
 @app.route('/get_desafio/<int:nivel>', methods=['GET'])
 def get_desafio(nivel):
     if nivel > 5:
@@ -65,7 +73,7 @@ def get_desafio(nivel):
             
     return jsonify({"erro": "Nível não encontrado!"}), 404
 
-# Expondo o objeto app para o Vercel
+# Expondo o objeto para o Vercel
 app = app
 
 if __name__ == '__main__':
