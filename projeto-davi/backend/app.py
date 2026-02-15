@@ -54,5 +54,8 @@ def get_desafio(nivel):
         return jsonify({"codigo": codigo, "referencia": v["ref"], "texto_original": v["texto"]})
     return jsonify({"erro": "Nivel nao encontrado"}), 404
 
-# Essencial para o Vercel localizar o app
-app = app
+# No final do arquivo, substitua o app.run() por:
+if __name__ == '__main__':
+    # O Render fornece a porta na variável de ambiente PORT
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
