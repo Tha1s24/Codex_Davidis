@@ -34,10 +34,13 @@ function carregarDadosUsuario() {
 async function carregarDesafio() {
     try {
         const response = await fetch(`${API_URL}/get_desafio/${nivelAtual}`);
+        
+        // Se o servidor retornar 404, significa que os níveis acabaram
         if (response.status === 404) {
             exibirModal("Vitória Real", "Você decifrou todos os pergaminhos do Reino!", "🏆");
             return;
         }
+
         const data = await response.json();
         if (cipherDisplay) cipherDisplay.innerText = data.codigo;
         if (cipherRef) cipherRef.innerText = data.referencia;
@@ -49,7 +52,6 @@ async function carregarDesafio() {
 }
 
 function verificarResposta() {
-    // Função interna para normalizar: remove acentos, espaços e força CAIXA ALTA
     const normalizar = (str) => {
         return str.normalize("NFD")
                   .replace(/[\u0300-\u036f]/g, "")
@@ -63,6 +65,14 @@ function verificarResposta() {
     if (palpite === "") return;
 
     if (palpite === respostaCerta) {
+        // --- TRAVA DE SEGURANÇA PARA O NÍVEL 5 ---
+        if (nivelAtual === 5) {
+            exibirModal("VITÓRIA SUPREMA", "Parabéns, Grande Escriba! Você decifrou o último pergaminho real.", "🏆");
+            // Opcional: Você pode manter o nível em 5 ou reiniciar o jogo após fechar o modal
+            userInput.value = "";
+            return; 
+        }
+
         exibirModal("Sábia Resposta", "O pergaminho foi revelado corretamente.", "🛡️");
         nivelAtual++;
         vidas = 5; 
