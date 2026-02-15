@@ -5,14 +5,11 @@ from database import db, init_db
 from auth import auth_bp
 from cipher_logic import criptografar_versiculo
 
-# Configuramos o Flask para reconhecer a pasta 'frontend' como local de arquivos estáticos
+# Configuração: static_folder diz onde estão seus arquivos de frente (HTML/CSS/JS)
 app = Flask(__name__, static_folder='frontend', static_url_path='')
-
-# CORS ativado para evitar bloqueios de segurança
 CORS(app)
 
-# --- CONFIGURAÇÃO DO BANCO DE DADOS (Ajuste para Vercel) ---
-# No Vercel, o banco precisa ficar na pasta /tmp para ter permissão de escrita
+# Banco de dados na pasta temporária do Vercel
 if os.environ.get('VERCEL'):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/database.db'
 else:
@@ -20,13 +17,27 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Inicializa extensões e tabelas
 init_db(app)
-
-# Registro do Blueprint de Autenticação
 app.register_blueprint(auth_bp)
 
-# --- BANCO DE DADOS DE VERSÍCULOS ---
+# --- ROTAS DE SERVIÇO ---
+
+@app.route('/')
+def index():
+    # Entrega o index.html que está dentro de /frontend
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/game.html')
+def game_page():
+    # Entrega o game.html que está dentro de /frontend
+    return send_from_directory(app.static_folder, 'game.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    # Se pedir qualquer outro arquivo (como css/style.css), busca na pasta frontend
+    return send_from_directory(app.static_folder, path)
+
+# --- API DO JOGO ---
 versiculos = {
     1: {"texto": "O SENHOR É MEU PASTOR", "ref": "Salmos 23:1"},
     2: {"texto": "A TI SENHOR LEVANTO A MINHA ALMA", "ref": "Salmos 25:1"},
@@ -35,46 +46,13 @@ versiculos = {
     5: {"texto": "O MEU SOCORRO VEM DO SENHOR", "ref": "Salmos 121:2"}
 }
 
-# --- ROTAS DE NAVEGAÇÃO (Resolvendo o Erro 404) ---
-
-@app.route('/')
-def index():
-    """Serve o arquivo index.html da pasta frontend"""
-    return send_from_directory('frontend', 'index.html')
-
-@app.route('/game.html')
-def game_page():
-    """Serve o arquivo game.html da pasta frontend"""
-    return send_from_directory('frontend', 'game.html')
-
-@app.route('/<path:path>')
-def serve_static(path):
-    """Rota genérica para servir CSS, JS e imagens dentro de frontend"""
-    return send_from_directory('frontend', path)
-
-# --- ROTA DA API DO JOGO ---
-
 @app.route('/get_desafio/<int:nivel>', methods=['GET'])
 def get_desafio(nivel):
-    if nivel > 5:
-        return jsonify({"erro": "Vitória Suprema alcançada!"}), 404
-        
     v = versiculos.get(nivel)
     if v:
-        try:
-            codigo = criptografar_versiculo(v["texto"], nivel)
-            return jsonify({
-                "codigo": codigo,
-                "referencia": v["ref"],
-                "texto_original": v["texto"]
-            }), 200
-        except Exception as e:
-            return jsonify({"erro": str(e)}), 500
-            
-    return jsonify({"erro": "Nível não encontrado!"}), 404
+        codigo = criptografar_versiculo(v["texto"], nivel)
+        return jsonify({"codigo": codigo, "referencia": v["ref"], "texto_original": v["texto"]})
+    return jsonify({"erro": "Nivel nao encontrado"}), 404
 
-# Expondo o objeto para o Vercel
+# Essencial para o Vercel localizar o app
 app = app
-
-if __name__ == '__main__':
-    app.run(debug=True)
