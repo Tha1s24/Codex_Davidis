@@ -70,7 +70,7 @@ O projeto foi construído utilizando as melhores práticas de desenvolvimento fu
 
 1. **Clone o repositório:**
 ```bash
-git clone https://github.com/seu-usuario/codex-davidis.git
+git clone https://github.com/Tha1s24/Codex_Davidis.git
 
 ```
 
@@ -106,7 +106,7 @@ O projeto demonstra conhecimentos sólidos em segurança da informação para we
 
 ## ✒️ Autor
 
-Desenvolvido por **Seu Nome** – [Seu LinkedIn](https://www.google.com/search?q=https://www.linkedin.com/in/seu-perfil) | [Seu GitHub](https://www.google.com/search?q=https://github.com/seu-usuario)
+Desenvolvido por **Seu Nome** – [Seu LinkedIn](www.linkedin.com/in/thais-vitória-ferraz-rangel)| [Seu GitHub](https://github.com/Tha1s24/Codex_Davidis.git)
 
 ---
 
