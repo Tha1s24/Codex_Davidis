@@ -106,7 +106,7 @@ O projeto demonstra conhecimentos sólidos em segurança da informação para we
 
 ## ✒️ Autor
 
-Desenvolvido por **Seu Nome** – [Seu LinkedIn](www.linkedin.com/in/thais-vitória-ferraz-rangel)| [Seu GitHub](https://github.com/Tha1s24/Codex_Davidis.git)
+Desenvolvido por **Thaís Vitória Ferraz Rangel** – [Seu LinkedIn](www.linkedin.com/in/thais-vitória-ferraz-rangel)| [Seu GitHub](https://github.com/Tha1s24/Codex_Davidis.git)
 
 ---
 
