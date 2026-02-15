@@ -1,5 +1,5 @@
-Flask
-Flask-Cors
-Flask-SQLAlchemy
-Flask-Bcrypt
+flask
+flask-cors
+flask-sqlalchemy
+flask-bcrypt
 gunicorn
