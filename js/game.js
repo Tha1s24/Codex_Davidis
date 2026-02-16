@@ -1,4 +1,7 @@
-const API_URL = "http://127.0.0.1:5000"; 
+const API_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" 
+    ? "http://127.0.0.1:5000" 
+    : ""; 
+
 let vidas = 5;
 let nivelAtual = 1;
 let textoOriginal = ""; 
@@ -13,6 +16,7 @@ const displayUsername = document.getElementById('display-username');
 
 function exibirModal(titulo, mensagem, icone = "✨") {
     const modal = document.getElementById('custom-modal');
+    if (!modal) return;
     document.getElementById('modal-title').innerText = titulo;
     document.getElementById('modal-text').innerText = mensagem;
     document.getElementById('modal-icon').innerText = icone;
@@ -35,7 +39,6 @@ async function carregarDesafio() {
     try {
         const response = await fetch(`${API_URL}/get_desafio/${nivelAtual}`);
         
-        // Se o servidor retornar 404, significa que os níveis acabaram
         if (response.status === 404) {
             exibirModal("Vitória Real", "Você decifrou todos os pergaminhos do Reino!", "🏆");
             return;
@@ -53,6 +56,7 @@ async function carregarDesafio() {
 
 function verificarResposta() {
     const normalizar = (str) => {
+        if (!str) return "";
         return str.normalize("NFD")
                   .replace(/[\u0300-\u036f]/g, "")
                   .toUpperCase()
@@ -65,10 +69,8 @@ function verificarResposta() {
     if (palpite === "") return;
 
     if (palpite === respostaCerta) {
-        // --- TRAVA DE SEGURANÇA PARA O NÍVEL 5 ---
         if (nivelAtual === 5) {
             exibirModal("VITÓRIA SUPREMA", "Parabéns, Grande Escriba! Você decifrou o último pergaminho real.", "🏆");
-            // Opcional: Você pode manter o nível em 5 ou reiniciar o jogo após fechar o modal
             userInput.value = "";
             return; 
         }
@@ -84,7 +86,7 @@ function verificarResposta() {
             exibirModal("Fim de Jornada", "Suas vidas acabaram. Reiniciando estudos...", "💀");
             reiniciarJogo();
         } else {
-            exibirModal("Tente Novamente", `Essa tradução não parece correta. Vidas: ${vidas}`, "❌");
+            exibirModal("Tente Novamente", `Essa tradução não parece correta.`, "❌");
             atualizarInterface();
         }
     }
@@ -104,7 +106,6 @@ function reiniciarJogo() {
     carregarDesafio();
 }
 
-// Event Listeners
 btnCheck?.addEventListener('click', verificarResposta);
 userInput?.addEventListener('keypress', (e) => { if (e.key === 'Enter') verificarResposta(); });
 

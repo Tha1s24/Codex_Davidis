@@ -1,8 +1,12 @@
-const API_URL = "http://127.0.0.1:5000";
+// Detecta se está rodando localmente ou no servidor
+const API_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" 
+    ? "http://127.0.0.1:5000" 
+    : ""; // Em produção, usa o caminho relativo
 
 // --- FUNÇÃO DO MINI-MODAL ---
 function exibirModal(titulo, mensagem, icone = "🛡️") {
     const modal = document.getElementById('custom-modal');
+    if (!modal) return;
     document.getElementById('modal-title').innerText = titulo;
     document.getElementById('modal-text').innerText = mensagem;
     document.getElementById('modal-icon').innerText = icone;
@@ -31,7 +35,6 @@ document.getElementById('register-form')?.addEventListener('submit', async (e) =
     const user = document.getElementById('reg-user').value;
     const pass = document.getElementById('reg-pass').value;
 
-    // Validação de senha forte (Regex)
     const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
     if (!senhaRegex.test(pass)) {
         exibirModal("Senha Fraca", "A senha deve ter 6+ caracteres, maiúsculas, minúsculas, números e símbolos.", "⚠️");
@@ -49,9 +52,12 @@ document.getElementById('register-form')?.addEventListener('submit', async (e) =
 
         if (response.ok) {
             exibirModal("Sucesso!", "Escriba registrado! Agora faça o seu login.", "📜");
-            setTimeout(() => location.reload(), 2000);
+            // Pequeno delay para o usuário ler a mensagem antes de limpar a tela
+            setTimeout(() => {
+                document.getElementById('show-login').click();
+            }, 2000);
         } else {
-            exibirModal("Erro", data.erro, "❌");
+            exibirModal("Erro", data.erro || "Falha no cadastro", "❌");
         }
     } catch (err) {
         exibirModal("Erro de Conexão", "O Templo está inacessível no momento.", "🔌");
@@ -81,7 +87,7 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
             }));
             window.location.href = "game.html"; 
         } else {
-            exibirModal("Acesso Negado", data.erro, "🚫");
+            exibirModal("Acesso Negado", data.erro || "Usuário ou senha inválidos", "🚫");
         }
     } catch (err) {
         exibirModal("Erro", "Falha ao conectar ao servidor.", "❌");
